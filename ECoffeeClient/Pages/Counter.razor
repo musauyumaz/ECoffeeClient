@@ -1,0 +1,18 @@
+﻿@page "/counter"
+
+<PageTitle>Sayıcı</PageTitle>
+
+<h1>Sayıcı</h1>
+
+<p role="status">Şimdiki Sayı: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Sayı Arttır</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

@@ -1,0 +1,37 @@
+﻿@page "/"
+
+
+
+@inject ICategoryService _categoryService ;
+
+<PageTitle></PageTitle>
+
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    public BaseResponse<CategoryResponse> GetAllCategory2 { get; set; }
+    public UpdateCategory UpdateCategory = new();
+    public BaseResponse<Category> GetCategory { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        GetAllCategory2 = await _categoryService.GetAllCategoryListAsync(0, 5);
+        GetCategory = await _categoryService.GetCategoryByIdAsync("1");
+        // //GetCategory = await _categoryService.AddCategoryAsync(new() { Name = "Sıcak Kahveler", Description = "Sıcak Kahveler" });
+        // GetCategory = await _categoryService.DeleteCategoryAsync("2");
+
+
+        // UpdateCategory.Id = GetCategory.Data.Id;
+        // UpdateCategory.Name = GetCategory.Data.Name;
+        // UpdateCategory.Description = GetCategory.Data.Description + " Update Description";
+        // UpdateCategory.IsActive = true;
+
+        // GetCategory = await _categoryService.UpdateCategoryAsync(UpdateCategory);
+
+        Console.WriteLine();
+
+    }
+}
