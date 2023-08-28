@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text;
+using System.Text.Json;
 
 namespace ECoffeeClient.Services
 {
@@ -15,9 +17,10 @@ namespace ECoffeeClient.Services
 
         public async Task<TResponse> DeleteAsync<TResponse>(RequestParameter requestParameter, string id)
         {
-            string url = Url(requestParameter);
-            url = (!String.IsNullOrEmpty(id) ? $"{url}/{id}" : url);
-            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync(url);
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.Append(Url(requestParameter));
+            urlBuilder.Append(!String.IsNullOrEmpty(id) ? urlBuilder.Append("/" + id) : urlBuilder.ToString());
+            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync(urlBuilder.ToString());
             return await httpResponseMessage.Content.ReadFromJsonAsync<TResponse>();
         }
 
@@ -25,9 +28,10 @@ namespace ECoffeeClient.Services
         {
             JsonSerializerOptions options = new();
             options.PropertyNameCaseInsensitive = true;
-            string url = Url(requestParameter);
-            url = (!String.IsNullOrEmpty(id) ? $"{url}/{id}" : url);
-            return await _httpClient.GetFromJsonAsync<TResponse>(url, options);
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.Append(Url(requestParameter));
+            urlBuilder.Append(!String.IsNullOrEmpty(id) ? urlBuilder.Append("/"+ id) : urlBuilder.ToString());
+            return await _httpClient.GetFromJsonAsync<TResponse>(urlBuilder.ToString(), options);
         }
 
         public async Task<TResponse> PostAsync<TRequest, TResponse>(RequestParameter requestParameter, TRequest body)
@@ -46,11 +50,12 @@ namespace ECoffeeClient.Services
 
         private string Url(RequestParameter requestParameter)
         {
-            string url = String.Empty;
-            url = $"{(!String.IsNullOrEmpty(requestParameter.BaseUrl) ? requestParameter.BaseUrl : _configuration["BaseUrl"])}{requestParameter.Controller}/{(!String.IsNullOrEmpty(requestParameter.Action) ? requestParameter.Action : "")}{(!String.IsNullOrEmpty(requestParameter.QueryString) ? "?" + requestParameter.QueryString : "/")}";
-
-            url = (!String.IsNullOrEmpty(requestParameter.FullEndPoint) ? requestParameter.FullEndPoint : url);
-
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.Append(!String.IsNullOrEmpty(requestParameter.BaseUrl) ? requestParameter.BaseUrl : _configuration["BaseUrl"]);
+            urlBuilder.Append(requestParameter.Controller + "/");
+            urlBuilder.Append(!String.IsNullOrEmpty(requestParameter.Action) ? requestParameter.Action : "");
+            urlBuilder.Append((!String.IsNullOrEmpty(requestParameter.QueryString) ? "?" + requestParameter.QueryString : "/"));
+            string url = (!String.IsNullOrEmpty(requestParameter.FullEndPoint) ? requestParameter.FullEndPoint : urlBuilder.ToString());
             return url;
         }
 
