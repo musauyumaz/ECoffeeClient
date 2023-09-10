@@ -19,8 +19,8 @@ namespace ECoffeeClient.Services.Categories
         public async Task<BaseResponse<Category>> DeleteCategoryAsync(string id)
             => await _httpClientService.DeleteAsync<BaseResponse<Category>>(new() { Controller = "Categories", Action = "Delete" }, id);
 
-        public async Task<BaseResponse<Category>> GetCategoryByIdAsync(string id)
-            => await _httpClientService.GetAsync<BaseResponse<Category>>(new() { Controller = "Categories", Action = "GetById" }, id);
+        public async Task<BaseResponse<GetByIdCategory>> GetCategoryByIdAsync(string id)
+            => await _httpClientService.GetAsync<BaseResponse<GetByIdCategory>>(new() { Controller = "Categories", Action = "GetById" }, id);
 
         public async Task<BaseResponse<CategoryResponse>> GetAllCategoryListAsync(int page, int size)
             => await _httpClientService.GetAsync<BaseResponse<CategoryResponse>>(new() { Controller = "Categories", Action = "GetAll", QueryString = $"page={page}&size={size}" });

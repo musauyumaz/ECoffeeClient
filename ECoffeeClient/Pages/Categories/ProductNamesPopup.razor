@@ -1,0 +1,24 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudList>
+            @foreach (var item in Products)
+            {
+                <MudListItem Text="@item" />
+            }
+        </MudList>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Dark" OnClick="Close">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public List<string> Products { get; set; }
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+
+
+    void Close() => MudDialog.Close(DialogResult.Ok(true));
+}
+

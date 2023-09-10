@@ -19,7 +19,7 @@ namespace ECoffeeClient.Services
         {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.Append(Url(requestParameter));
-            urlBuilder.Append(!String.IsNullOrEmpty(id) ? urlBuilder.Append("/" + id) : urlBuilder.ToString());
+            urlBuilder.Append(!String.IsNullOrEmpty(id) ? "/" + id : "");
             HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync(urlBuilder.ToString());
             return await httpResponseMessage.Content.ReadFromJsonAsync<TResponse>();
         }
@@ -30,7 +30,7 @@ namespace ECoffeeClient.Services
             options.PropertyNameCaseInsensitive = true;
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.Append(Url(requestParameter));
-            urlBuilder.Append(!String.IsNullOrEmpty(id) ? urlBuilder.Append("/"+ id) : urlBuilder.ToString());
+            urlBuilder.Append(!String.IsNullOrEmpty(id) ? id : "");
             return await _httpClient.GetFromJsonAsync<TResponse>(urlBuilder.ToString(), options);
         }
 
@@ -55,8 +55,8 @@ namespace ECoffeeClient.Services
             urlBuilder.Append(requestParameter.Controller + "/");
             urlBuilder.Append(!String.IsNullOrEmpty(requestParameter.Action) ? requestParameter.Action : "");
             urlBuilder.Append((!String.IsNullOrEmpty(requestParameter.QueryString) ? "?" + requestParameter.QueryString : "/"));
-            string url = (!String.IsNullOrEmpty(requestParameter.FullEndPoint) ? requestParameter.FullEndPoint : urlBuilder.ToString());
-            return url;
+            return !String.IsNullOrEmpty(requestParameter.FullEndPoint) ? requestParameter.FullEndPoint : urlBuilder.ToString();
+
         }
 
 

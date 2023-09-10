@@ -1,0 +1,28 @@
+﻿@inject ICategoryService _categoryService;
+@inject ISnackbar _snackbar;
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" @bind-Value="addCategory.Name" Label="Name">@addCategory.Name</MudTextField>
+        <MudTextField T="string" @bind-Value="addCategory.Description" Label="Description">@addCategory.Description</MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Add">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    AddCategory addCategory = new();
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    async Task Add()
+    {
+        var category = await _categoryService.AddCategoryAsync(addCategory);
+        _snackbar.Add(category.Message, Severity.Success);
+    }
+}

@@ -1,0 +1,62 @@
+﻿@page "/test"
+@using System.Text;
+@using ECoffeeClient.Pages.Categories;
+
+@inject ICategoryService _categoryService ;
+@inject IDialogService _dialogService;
+
+<MudTable Items="@Categories">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Product Names</MudTh>
+        <MudTh>Details</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+        <MudTd DataLabel="Products"><MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="@((args) => OpenProductNamesPopup((context.Id)))">Products</MudButton></MudTd>
+        <MudTd><MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@((args) => OpenInfoPopup((context.Id)))">Info</MudButton></MudTd>
+    </RowTemplate>
+</MudTable>
+<br />
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCategoryAddPopup">Yeni Kategori</MudButton>
+
+
+
+@code {
+
+    public List<Category> Categories { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Categories = (await _categoryService.GetAllCategoryListAsync(0, 8)).Data.Categories;
+
+    }
+    public async Task OpenInfoPopup(string id)
+    {
+        DialogParameters<InfoPopup> parameters = new();
+        var category = (await _categoryService.GetCategoryByIdAsync(id)).Data;
+        parameters.Add(x => x.Category, category);
+        _dialogService.Show<InfoPopup>("Details", parameters);
+    }
+
+    public void OpenProductNamesPopup(string id)
+    {
+        DialogParameters<ProductNamesPopup> parameters = new();
+        parameters.Add(x => x.Products, Categories.Where(c => c.Id == id).Select(c => c.ProductNames).FirstOrDefault());
+        _dialogService.Show<ProductNamesPopup>("Products", parameters);
+    }
+
+    public void OpenCategoryAddPopup()
+    {
+        _dialogService.Show<CategoryAddPopup>("Kategori Ekle");
+    }
+}
+
+
+
+
+
+
+

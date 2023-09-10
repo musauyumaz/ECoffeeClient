@@ -1,6 +1,7 @@
 using ECoffeeClient.Data;
 using ECoffeeClient.Services;
 using ECoffeeClient.Services.Categories;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddHttpClient();
+builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IHttpClientService,HttpClientService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();

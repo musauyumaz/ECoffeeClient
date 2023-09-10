@@ -1,0 +1,36 @@
+﻿@inject ICategoryService _categoryService;
+@inject ISnackbar _snackbar;
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" @bind-Value="Category.Name" Label="Name">@Category.Name</MudTextField>
+        <MudTextField T="string" @bind-Value="Category.Description" Label="Description">@Category.Description</MudTextField>
+        <MudSwitch @bind-Checked="@Category.IsActive" Color="Color.Success" UnCheckedColor="Color.Error" Label="Active" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Update">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    UpdateCategory updateCategory = new();
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public GetByIdCategory Category { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    async Task Update()
+    {
+        updateCategory.Id = Category.Id;
+        updateCategory.Name = Category.Name;
+        updateCategory.Description = Category.Name;
+        updateCategory.IsActive = Category.IsActive;
+
+
+        var category = await _categoryService.UpdateCategoryAsync(updateCategory);
+        _snackbar.Add(category.Message, Severity.Success);
+    }
+}
